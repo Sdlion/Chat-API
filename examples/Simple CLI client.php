@@ -57,15 +57,14 @@ $w = new WhatsProt($username, $nickname, $debug);
 $w->eventManager()->bind('onPresenceAvailable', 'onPresenceAvailable');
 $w->eventManager()->bind('onPresenceUnavailable', 'onPresenceUnavailable');
 
-$w->connect(); // Nos conectamos a la red de WhatsApp
-$w->loginWithPassword($password); // Iniciamos sesion con nuestra contraseña
-echo "[*]Conectado a WhatsApp\n\n";
-$w->sendGetServerProperties(); // Obtenemos las propiedades del servidor
-$w->sendClientConfig(); // Enviamos nuestra configuración al servidor
+$w->connect(); // We connect to WhatsApp network
+$w->loginWithPassword($password); // Whatsapp API login
+echo "[*]Connected to WhatsApp\n\n";
+$w->sendGetServerProperties(); // WARNING: This should be done once a week at most
 $sync = [$target];
-$w->sendSync($sync); // Sincronizamos el contacto
-$w->pollMessage(); // Volvemos a poner en cola mensajes
-$w->sendPresenceSubscription($target); // Nos suscribimos a la presencia del usuario
+$w->sendSync($sync); // Contacts Syncronization, this shouldn't be done frequently and only on logins
+$w->pollMessage(); // Check for events
+$w->sendPresenceSubscription($target); // Contact presence subscription, only on synced and unsubscribed contacts
 
 $pn = new ProcessNode($w, $target);
 $w->setNewMessageBind($pn);
